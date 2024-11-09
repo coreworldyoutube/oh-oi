@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # Wikipedia APIを使って情報を取得する関数
 def get_wikipedia_data(search_query):
-    url = f"https://ja.wikipedia.org/w/api.php"
+    url = "https://ja.wikipedia.org/w/api.php"
     params = {
         "action": "query",
         "format": "json",
@@ -20,7 +20,6 @@ def get_wikipedia_data(search_query):
     if response.status_code == 200:
         data = response.json()
         pages = data["query"]["pages"]
-
         for page_id, page in pages.items():
             if "extract" in page:
                 return page["extract"]
@@ -52,7 +51,6 @@ def search_data(search_query, elements_data, descriptions_data):
     # 検索対象データ（elements.json）の中から部分一致を探す
     for key in elements_data:
         match_score = sum(1 for char in search_query if char in key)
-
         if match_score > 0:
             results.append((key, elements_data[key], match_score))
 
