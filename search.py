@@ -101,4 +101,53 @@ def search_mode(elements_data, descriptions_data):
             return
         else:
             try:
-                selected_index =
+                selected_index = int(action) - 1
+                if 0 <= selected_index < len(results):
+                    selected_key = results[selected_index][0]
+                    print(f"『{selected_key}』の再編集を行います。")
+                    edit_entry(selected_key, elements_data, descriptions_data)
+                else:
+                    print("無効な番号が選ばれました。")
+            except ValueError:
+                print("無効な入力です。")
+    else:
+        print("検索結果はありませんでした。")
+
+# 再編集モードでデータを編集する関数
+def edit_entry(selected_key, elements_data, descriptions_data):
+    print(f"『{selected_key}』の再編集を行います。")
+
+    new_hit_point = int(input(f"現在のヒットポイント: {elements_data[selected_key]}. 新しいヒットポイントを入力してください: "))
+    elements_data[selected_key] = new_hit_point
+
+    new_description = input(f"現在の説明: {descriptions_data.get(selected_key, '説明はありません。')} 新しい説明を入力してください: ")
+    descriptions_data[selected_key] = new_description
+
+    with open('elements.json', 'w', encoding='utf-8') as elem_file:
+        json.dump(elements_data, elem_file, ensure_ascii=False, indent=4)
+
+    with open('descriptions.json', 'w', encoding='utf-8') as desc_file:
+        json.dump(descriptions_data, desc_file, ensure_ascii=False, indent=4)
+
+    print("データが再編集されました。")
+
+# メインのプログラム
+def main():
+    # コマンドライン引数でモードを決定
+    if len(sys.argv) > 1:
+        mode = sys.argv[1]
+    else:
+        mode = "editor"  # デフォルトは "editor" モード
+
+    elements_data, descriptions_data = load_data()
+
+    if mode == 'editor':
+        editor_mode(elements_data, descriptions_data)
+    elif mode == 'search':
+        search_mode(elements_data, descriptions_data)
+    else:
+        print("無効なモードが選ばれました。")
+
+# 実行
+if __name__ == "__main__":
+    main()
