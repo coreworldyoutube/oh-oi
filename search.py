@@ -1,6 +1,5 @@
 import json
 import requests
-import sys
 
 # 要素データと説明データを読み込む関数
 def load_data():
@@ -46,14 +45,19 @@ def get_wikipedia_data(search_query):
 # エディターモードでデータを編集・追加する関数
 def editor_mode(elements_data, descriptions_data):
     print("エディターモードです。データを入力してください。")
-    num_entries = int(input("何件のデータを入力しますか？: "))
-
-    for _ in range(num_entries):
-        search_key = input("検索ワードを入力してください（例: 鉄, 金属）: ")
-        hit_point = int(input(f"『{search_key}』のヒットポイントを入力してください（例: 1）: "))
+    
+    # ここでは手動で定義したデータを使う
+    data = [
+        {"search_key": "鉄", "hit_point": 1, "description": "鉄は金属の一種です。"},
+        {"search_key": "金属", "hit_point": 2, "description": "金属は元素の一群です。"}
+    ]
+    
+    for entry in data:
+        search_key = entry["search_key"]
+        hit_point = entry["hit_point"]
+        description = entry["description"]
+        
         elements_data[search_key] = hit_point
-
-        description = input(f"『{search_key}』の説明を入力してください: ")
         descriptions_data[search_key] = description
 
     # 入力されたデータをファイルに保存
@@ -67,9 +71,9 @@ def editor_mode(elements_data, descriptions_data):
 
 # 検索モードでデータを検索する関数
 def search_mode(elements_data, descriptions_data):
-    search_query = input("検索したいワードを入力してください: ")
+    search_query = "金属"  # 事前に設定された検索ワード
+    
     results = []
-
     # 検索対象データ（elements.json）の中から部分一致を探す
     for key in elements_data:
         match_score = sum(1 for char in search_query if char in key)
@@ -94,8 +98,8 @@ def search_mode(elements_data, descriptions_data):
         print(f"\nWikipediaからの説明: {wiki_description}")
 
         # ユーザーに再編集または戻るを選択させる
-        action = input("\n再編集するには番号を入力、戻るには 'b' を入力してください: ").strip()
-
+        action = 'b'  # 戻るアクションを仮定
+        
         if action == 'b':
             print("戻ります。")
             return
@@ -117,10 +121,10 @@ def search_mode(elements_data, descriptions_data):
 def edit_entry(selected_key, elements_data, descriptions_data):
     print(f"『{selected_key}』の再編集を行います。")
 
-    new_hit_point = int(input(f"現在のヒットポイント: {elements_data[selected_key]}. 新しいヒットポイントを入力してください: "))
+    new_hit_point = 3  # 事前に設定された新しいヒットポイント
     elements_data[selected_key] = new_hit_point
 
-    new_description = input(f"現在の説明: {descriptions_data.get(selected_key, '説明はありません。')} 新しい説明を入力してください: ")
+    new_description = "新しい説明です。"  # 事前に設定された新しい説明
     descriptions_data[selected_key] = new_description
 
     with open('elements.json', 'w', encoding='utf-8') as elem_file:
@@ -133,12 +137,9 @@ def edit_entry(selected_key, elements_data, descriptions_data):
 
 # メインのプログラム
 def main():
-    # コマンドライン引数でモードを決定
-    if len(sys.argv) > 1:
-        mode = sys.argv[1]
-    else:
-        mode = "editor"  # デフォルトは "editor" モード
-
+    print("エディターモードか検索モードか選んでください。")
+    mode = 'editor'  # 事前に設定されたモード
+    
     elements_data, descriptions_data = load_data()
 
     if mode == 'editor':
