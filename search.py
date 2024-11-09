@@ -72,4 +72,4 @@ def home():
     return render_template("index.html", results=results, wiki_description=wiki_description)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5045, debug=True)  # ポート番号を5001に変更
+    app.run(host="0.0.0.0", port=8080, debug=True)  # ポート番号を5001に変更
