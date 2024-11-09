@@ -2,33 +2,29 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>データ検索</title>
+    <title>検索ツール</title>
 </head>
 <body>
-    <h1>検索ワードを入力してください</h1>
+    <h1>検索ツール</h1>
     <form method="post">
-        <input type="text" name="search_query" placeholder="検索ワード" required>
+        <input type="text" name="search_query" placeholder="検索クエリ" required>
         <button type="submit">検索</button>
     </form>
-
+    
     {% if results %}
         <h2>検索結果:</h2>
         <ul>
-        {% for result in results %}
-            <li>
-                <strong>{{ result[0] }}</strong><br>
-                ヒットポイント: {{ result[1] }}<br>
-                説明: {{ descriptions_data.get(result[0], '説明はありません。') }}<br>
-            </li>
-        {% endfor %}
+            {% for result in results %}
+                <li>
+                    <strong>{{ result[0] }}</strong>: {{ result[1] }} (マッチスコア: {{ result[2] }})
+                </li>
+            {% endfor %}
         </ul>
-    {% else %}
-        <p>検索結果はありませんでした。</p>
     {% endif %}
-
-    <h2>Wikipediaからの説明:</h2>
-    <p>{{ wiki_description }}</p>
-
+    
+    {% if wiki_description %}
+        <h2>Wikipediaからの説明:</h2>
+        <p>{{ wiki_description }}</p>
+    {% endif %}
 </body>
 </html>
